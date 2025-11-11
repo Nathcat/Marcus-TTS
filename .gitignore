@@ -1,5 +1,8 @@
-node_modules
-jv
+# Ignore Gradle project-specific cache directory
+.gradle
 
-package-lock.json
-*.env
+# Ignore Gradle build output directory
+build
+
+Assets
+**/*.mp3
