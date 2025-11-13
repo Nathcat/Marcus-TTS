@@ -1,5 +1,7 @@
 package net.nathcat.marcus
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import org.json.simple.parser.ParseException
@@ -12,8 +14,8 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
-const val VERSION_STRING: String = "Marcus TTS v1.1.0 - Nathcat"
-const val VERSION_CODE: Int = 2
+const val VERSION_STRING: String = "Marcus TTS v1.1.1 - Nathcat"
+const val VERSION_CODE: Int = 3
 
 /**
  * Read JSON from an input stream
@@ -35,6 +37,7 @@ fun readJSON(stream: InputStream): JSONObject {
 /**
  * Use the API to transform a string into a TTS message
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Throws(IOException::class, ParseException::class)
 fun GetTTS(text: String): ByteArray {
     val url = URL("https://ottsy.weilbyte.dev/api/generation")
@@ -58,6 +61,7 @@ fun GetTTS(text: String): ByteArray {
     return rB
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun GetMessages(): String? {
     val url = URL("https://nathcat.net/static/docs/Marcus-TTS/app-messages.php?v=$VERSION_CODE")
     val con = url.openConnection() as HttpURLConnection

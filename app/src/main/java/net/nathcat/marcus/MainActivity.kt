@@ -2,11 +2,13 @@ package net.nathcat.marcus
 
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -115,6 +117,7 @@ class MainActivity(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -175,6 +178,16 @@ class MainActivity(
                                         modifier = Modifier.fillMaxWidth()
                                     ) },
                                     onClick = {
+                                        if (text.text == "") {
+                                            Toast.makeText(
+                                                this@MainActivity,
+                                                "You have not entered any text!",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                            return@IconButton
+                                        }
+
                                         Thread {
                                             obtainTTS(text.text) { file ->
                                                 val uri = try { AudioFileProvider.getUriForFile(
@@ -264,15 +277,28 @@ class MainActivity(
         }
 
         Thread {
-            val message = GetMessages()
-            if (message != null) {
+            try {
+                val message = GetMessages()
+                if (message != null) {
+                    this@MainActivity.runOnUiThread {
+                        Toast.makeText(
+                            this@MainActivity,
+                            message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            }
+            catch (e: IOException) {
                 this@MainActivity.runOnUiThread {
                     Toast.makeText(
                         this@MainActivity,
-                        message,
+                        "Failed to connect to nathcat.net!",
                         Toast.LENGTH_LONG
                     ).show()
                 }
+
+                e.printStackTrace()
             }
         }.start()
     }
