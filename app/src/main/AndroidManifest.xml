@@ -13,6 +13,16 @@
         android:roundIcon="@mipmap/marcus_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Marcus">
+        <provider
+            android:authorities="net.nathcat.marcus.fileprovider"
+            android:name="net.nathcat.marcus.AudioFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/providerpaths" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
