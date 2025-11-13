@@ -12,6 +12,9 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
+const val VERSION_STRING: String = "Marcus TTS v1.1.0 - Nathcat"
+const val VERSION_CODE: Int = 2
+
 /**
  * Read JSON from an input stream
  */
@@ -53,4 +56,15 @@ fun GetTTS(text: String): ByteArray {
 
     os.close()
     return rB
+}
+
+fun GetMessages(): String? {
+    val url = URL("https://nathcat.net/static/docs/Marcus-TTS/app-messages.php?v=$VERSION_CODE")
+    val con = url.openConnection() as HttpURLConnection
+    con.requestMethod = "GET"
+    con.doOutput = true
+
+    val response = String(con.getInputStream().readAllBytes())
+
+    return if (response == "N/A") { null } else { response }
 }
